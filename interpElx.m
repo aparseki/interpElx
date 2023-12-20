@@ -1,7 +1,9 @@
 function done = interpElx(x,z,inc,int,numelx)
-% interpElx: takes electrode posistion in x-z space at smaller or larger 
-% spacing and interpolates to make them at the desired electrode
-% spacing.  input must be in x-z space, NOT along-the-line-distance space.
+% interpElx: takes topographic posistions in x-z space and interpolates to 
+% make them at the desired sensor spacing. e.g., Extract elevations at
+% electrode locations from sub-meter LIDAR coverage.
+%
+% Input must be in x-z space, NOT along-the-line-distance space.
 % The inputs do NOT need to be evenly spaced in the x-direction.
 % Appropriate for LiDAR extracted positions or sparse GPS measurements
 %
@@ -11,7 +13,7 @@ function done = interpElx(x,z,inc,int,numelx)
 % int = electrode spacing interval
 % numelex = number of total electrodes
 %
-% A Parsekian 11/2019
+% A Parsekian 11/2019, update 12/2023
 % ===================================================================
 
 cnt = 1;
