@@ -1,6 +1,6 @@
 # interpElx
-This function takes topographic posistions in x-z space and interpolates to 
-extract elebations at the actual sensor spacing. e.g., Extract elevations at 
+This function takes irregual topographic data in x-z space and interpolates to 
+calculate elevations at the actual sensor positions. e.g., Extract elevations at 
 electrode locations from sub-meter LIDAR coverage.
 
 The x and z inputs are a list of topography values along the desired transect. 
