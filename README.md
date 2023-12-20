@@ -1,12 +1,9 @@
 # interpElx
-interpElx: takes electrode (or geophone, or any sensors spaced along a line) posistion in x-z space at smaller or larger 
-% spacing and interpolates to make them at the desired electrode
-% spacing.  input must be in x-z space, NOT along-the-line-distance space.
-% The inputs do NOT need to be evenly spaced in the x-direction.
-% Appropriate for LiDAR extracted positions or sparse GPS measurements
-%
-% x = map-view distance along the line
-% z = elevation
-% inc = interpolation incrament, leave at 0.001 unless v. long or shrt line
-% int = electrode spacing interval
-% numelex = number of total electrodes
+This function takes topographic posistions in x-z space and interpolates to 
+extract elebations at the actual sensor spacing. e.g., Extract elevations at 
+electrode locations from sub-meter LIDAR coverage.
+
+The x and z inputs are a list of topography values along the desired transect. 
+
+The actual sensor spacing is defined by the "along the line" regular sensor
+spacing.
