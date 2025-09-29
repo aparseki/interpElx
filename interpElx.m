@@ -1,4 +1,4 @@
-function done = interpElx(x,z,inc,int,numelx)
+function done = interpElx(x,z,inc,int,numelx,arrayStart,arrayFlip)
 % interpElx: takes topographic posistions in x-z space and interpolates to 
 % make them at the desired sensor spacing. e.g., Extract elevations at
 % electrode locations from sub-meter LIDAR coverage.
@@ -7,14 +7,38 @@ function done = interpElx(x,z,inc,int,numelx)
 % The inputs do NOT need to be evenly spaced in the x-direction.
 % Appropriate for LiDAR extracted positions or sparse GPS measurements
 %
-% x = map-view distance along the line
-% z = elevation
+% x = map-view distance along the line -OR- a two-column vector [x z]
+% z = elevation (entry is ignored if a two column vector is input for 'x')
 % inc = interpolation incrament, leave at 0.001 unless v. long or shrt line
 % int = electrode spacing interval
 % numelex = number of total electrodes
+% arrayStart = if the input data includes locations before the start point,
+%              input the distance in meters where the first sensor is.
+%              Otherwise, leave blank.
+% arrayFlip = if the input data is in the opposite direction of the array
+%             numbering, set this to 1. Otherwise leave blank.
 %
 % A Parsekian 11/2019, update 12/2023
 % ===================================================================
+
+xCols = size (x); % find size of input 'x' matrix/vector
+if xCols(2) ==2   % if 'x' has 2 colums...
+    z = x(:,2);   % ...then seperate into two columns here 
+    x(:,2) = [];
+end % if x and z were already provided as sperate columns, skip this 
+
+yn = exist('arrayStart'); %check to see if the variable is being used
+if yn == 1 %indicates a value has been input by user
+    x = x-arrayStart; %adjust all 'x' values by the arrayStart amount
+    [~, index_closest] = min(abs(x));
+    
+    arrayLen = (int*numelx)-2;
+    arrayMax = x -arrayLen;
+    [~, index_furthest] = min(abs(arrayMax));
+
+    x = x(index_closest:index_furthest);
+    z = z(index_closest:index_furthest); 
+end
 
 cnt = 1;
 outx = 0; outz = 0;
@@ -28,6 +52,10 @@ end
 
 dist = outx(2:end); %just removes the zeroes added to initate the vectrs
 elev = outz(2:end);
+
+if arrayFlip ==1   % if user input requires direction flip...
+    elev = fliplr(elev);   % ...then reverse the direction of 'dist' 
+end % if no direction switch is needed, skip this 
 
 % next, loop to follow along the line and incramentally find the next
 % x-location that satisfies the known allong-the-line-distance "int"
@@ -47,11 +75,17 @@ for i = 1:numelx-1
     stInd = stInd+nwInd; %advance the starting index
 end
 
+if arrayFlip == 0
 done = [0 z(1); done]; % the zero point had been skipped, so add that back in
+else
+done = [0 z(end); done];
+end
+
 
 subplot(1,2,1)
-plot(done(:,1),done(:,2),'+r'); hold on
-plot(x,z,'ok')
+plot(done(:,1),done(:,2),'-r'); hold on
+plot(done(:,1),done(:,2),'or'); hold on
+%plot(x,z,'.k')
 
 for i = 1:length(done)-1  % just check the interpolation
     A2 = (done(i,1)-done(i+1,1))^2;
