@@ -14,9 +14,9 @@ function done = interpElx(x,z,inc,int,numelx,arrayStart,arrayFlip)
 % numelex = number of total electrodes
 % arrayStart = if the input data includes locations before the start point,
 %              input the distance in meters where the first sensor is.
-%              Otherwise, leave blank.
+%              Otherwise, 0.
 % arrayFlip = if the input data is in the opposite direction of the array
-%             numbering, set this to 1. Otherwise leave blank.
+%             numbering, set this to 1. Otherwise 0.
 %
 % A Parsekian 11/2019, update 12/2023
 % ===================================================================
