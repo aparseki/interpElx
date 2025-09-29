@@ -1,4 +1,4 @@
-function done = interpElx(x,z,inc,int,numelx,arrayStart,arrayFlip)
+function done = interpElx(x,z,inc,int,numelx,arrayStart,arrayFlip,addY)
 % interpElx: takes topographic posistions in x-z space and interpolates to 
 % make them at the desired sensor spacing. e.g., Extract elevations at
 % electrode locations from sub-meter LIDAR coverage.
@@ -17,6 +17,8 @@ function done = interpElx(x,z,inc,int,numelx,arrayStart,arrayFlip)
 %              Otherwise, 0.
 % arrayFlip = if the input data is in the opposite direction of the array
 %             numbering, set this to 1. Otherwise 0.
+% addY = if a column of zero y-values is needed between the x and z columns
+%        of the output, set to 1. Otherwise 0.
 %
 % A Parsekian 11/2019, update 12/2023
 % ===================================================================
@@ -94,3 +96,7 @@ for i = 1:length(done)-1  % just check the interpolation
 end
 subplot(1,2,2)
 hist(C2) %due to irregular sampling, there will be small variations in allong-line-dist, but these will be less than the width of an electrode.
+
+if addY ==1
+    done = [done(:,1) zeros(length(done),1) done(:,2)];
+end
